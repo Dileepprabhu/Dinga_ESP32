@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include "MotorControl.h" // Include MotorControl header
 
 // Expose WebSocket server object
 extern AsyncWebSocket ws;

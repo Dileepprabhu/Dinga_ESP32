@@ -1,4 +1,5 @@
 #include "WiFiModule.h"
+#include "MotorControl.h"
 
 // Access Point credentials
 const char* ssid = "ESP32_AP";
@@ -35,6 +36,29 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
     } else if (receivedData == "Motor_Test_Start") {
       motorTestTriggered = true;
       Serial.println("Motor test sequence triggered.");
+    } else {
+      // Handle motor control commands
+      char command = receivedData.charAt(0);
+      switch (command) {
+
+        case 'W': // Move forward
+          controlMotors(false, MotorDirection::FORWARD, 50); // Example: Move forward at 50% speed
+          break;
+        case 'S': // Move backward
+          controlMotors(false, MotorDirection::REVERSE, 50); // Example: Move backward at 50% speed
+          break;
+        case 'A': // Turn left
+          controlMotors(false, MotorDirection::LEFT, 50); // Example: Turn left at 50% speed
+          break;
+        case 'D': // Turn right
+          controlMotors(false, MotorDirection::RIGHT, 50); // Example: Turn right at 50% speed
+          break;
+        case 'X': // Stop
+          controlMotors(false, MotorDirection::STOP, 0); // Stop the motor
+          break;
+        default:
+          break;
+      }
     }
   }
 }
