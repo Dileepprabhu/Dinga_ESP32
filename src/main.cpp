@@ -1,6 +1,6 @@
-#include <Arduino.h>
-#include "MotorControl.h"
-#include "WiFiModule.h"
+#include <Arduino.h> // Include the Arduino core library
+#include "MotorControl.h" // Include the motor control module
+#include "WiFiModule.h" // Include the WiFi module
 #include "EncoderModule.h" // Include the encoder module
 #include <ArduinoJson.h> // Include ArduinoJson library
 
