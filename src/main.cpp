@@ -233,7 +233,7 @@ void loop() {
         }
     }
 
-    // Print encoder values every 500 ms
+    // Print encoder values and motor status every 500 ms
     static unsigned long lastPrintTime = 0;
     unsigned long currentTime = millis();
 
@@ -241,17 +241,24 @@ void loop() {
         lastPrintTime = currentTime;
         int32_t ticks1 = readEncoder();
         int32_t ticks2 = readEncoder2();
+        MotorStatus motorStatus = getMotorStatus();
 
         StaticJsonDocument<256> jsonDoc;
         JsonObject json = jsonDoc.to<JsonObject>();
 
         json["encoder1Ticks"] = ticks1;
         json["encoder2Ticks"] = ticks2;
+        json["motor1Speed"] = motorStatus.motor1Speed;
+        json["motor2Speed"] = motorStatus.motor2Speed;
+        json["motorDirection"] = motorStatus.direction;
 
         sendJsonToWebSocket(json);
 
         // Print to Serial
         Serial.printf("Encoder 1 ticks: %d\n", ticks1);
         Serial.printf("Encoder 2 ticks: %d\n", ticks2);
+        Serial.printf("Motor 1 speed: %d\n", motorStatus.motor1Speed);
+        Serial.printf("Motor 2 speed: %d\n", motorStatus.motor2Speed);
+        Serial.printf("Motor direction: %d\n", motorStatus.direction);
     }
 }

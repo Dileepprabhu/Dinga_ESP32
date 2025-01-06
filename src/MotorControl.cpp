@@ -6,6 +6,9 @@
 #define MOTOR2_A 26
 #define MOTOR2_B 25
 
+// Global variable to store motor status
+MotorStatus motorStatus = {0, 0, STOP};
+
 // Initialize Motors
 void initializeMotors() {
     pinMode(MOTOR1_A, OUTPUT);
@@ -29,6 +32,9 @@ uint8_t calculateDutyCycle(uint8_t speedPercentage) {
 void setMotorSpeed(uint8_t dutyCycle, MotorDirection dir) {
     switch (dir) {
         case FORWARD:
+            motorStatus.motor1Speed = dutyCycle;
+            motorStatus.motor2Speed = dutyCycle;
+            motorStatus.direction = dir;
             analogWrite(MOTOR1_A, dutyCycle);
             analogWrite(MOTOR1_B, 0);
             analogWrite(MOTOR2_A, dutyCycle);
@@ -36,6 +42,9 @@ void setMotorSpeed(uint8_t dutyCycle, MotorDirection dir) {
             break;
 
         case REVERSE:
+            motorStatus.motor1Speed = dutyCycle;
+            motorStatus.motor2Speed = dutyCycle;
+            motorStatus.direction = dir;
             analogWrite(MOTOR1_A, 0);
             analogWrite(MOTOR1_B, dutyCycle);
             analogWrite(MOTOR2_A, 0);
@@ -43,6 +52,9 @@ void setMotorSpeed(uint8_t dutyCycle, MotorDirection dir) {
             break;
 
         case LEFT:
+            motorStatus.motor1Speed = 0;
+            motorStatus.motor2Speed = dutyCycle;
+            motorStatus.direction = dir;
             analogWrite(MOTOR1_A, 0);        // Stop left motor
             analogWrite(MOTOR1_B, 0);
             analogWrite(MOTOR2_A, dutyCycle); // Run right motor forward
@@ -50,6 +62,9 @@ void setMotorSpeed(uint8_t dutyCycle, MotorDirection dir) {
             break;
 
         case RIGHT:
+            motorStatus.motor1Speed = dutyCycle;
+            motorStatus.motor2Speed = 0;
+            motorStatus.direction = dir;
             analogWrite(MOTOR1_A, dutyCycle); // Run left motor forward
             analogWrite(MOTOR1_B, 0);
             analogWrite(MOTOR2_A, 0);        // Stop right motor
@@ -58,12 +73,20 @@ void setMotorSpeed(uint8_t dutyCycle, MotorDirection dir) {
 
         case STOP:
         default:
+            motorStatus.motor1Speed = 0;
+            motorStatus.motor2Speed = 0;
+            motorStatus.direction = dir;
             analogWrite(MOTOR1_A, 0); // Stop both motors
             analogWrite(MOTOR1_B, 0);
             analogWrite(MOTOR2_A, 0);
             analogWrite(MOTOR2_B, 0);
             break;
     }
+}
+
+// Function to get motor status
+MotorStatus getMotorStatus() {
+    return motorStatus;
 }
 
 // Control Motors
